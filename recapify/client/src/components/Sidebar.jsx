@@ -1,48 +1,52 @@
-import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Video, Mic, GraduationCap, Brain } from "lucide-react";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import {
+  HomeIcon,
+  ArrowUpTrayIcon,
+  MicrophoneIcon,
+  DocumentTextIcon,
+  ListBulletIcon,
+} from "@heroicons/react/24/outline";
+
+const menu = [
+  { name: "Dashboard", icon: HomeIcon, path: "/dashboard" },
+  { name: "Upload / Record", icon: ArrowUpTrayIcon, path: "/upload" },
+  { name: "Summary", icon: DocumentTextIcon, path: "/summary" },
+  { name: "Tasks", icon: ListBulletIcon, path: "/tasks" },
+];
 
 export default function Sidebar() {
-  const location = useLocation();
-
-  const links = [
-    { path: "/", name: "Dashboard", icon: <LayoutDashboard size={18} /> },
-    { path: "/meetings", name: "Meetings", icon: <Video size={18} /> },
-    { path: "/interviews", name: "Interviews", icon: <Mic size={18} /> },
-    { path: "/learning", name: "Learning", icon: <GraduationCap size={18} /> },
-  ];
-
   return (
-    <div className="h-screen bg-[#0f0f0f] border-r border-gray-800 w-64 flex flex-col p-5 text-gray-300">
-      {/* Logo Section */}
-      <div className="flex items-center gap-2 mb-10">
-        <Brain className="text-blue-500" size={24} />
-        <h1 className="text-xl font-semibold text-white tracking-wide">
-          AI Assistant
-        </h1>
+    <aside className="w-64 bg-[#0b1220] border-r border-gray-800 fixed left-0 top-0 h-full z-40 px-6 py-6">
+      <div className="mb-8">
+        <div className="text-2xl font-semibold">Recapify</div>
       </div>
 
-      {/* Navigation */}
-      <nav className="space-y-2">
-        {links.map((link) => (
-          <Link
-            key={link.path}
-            to={link.path}
-            className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all ${
-              location.pathname === link.path
-                ? "bg-blue-600 text-white"
-                : "hover:bg-[#1e1e1e] text-gray-400 hover:text-white"
-            }`}
-          >
-            {link.icon}
-            <span className="text-sm font-medium">{link.name}</span>
-          </Link>
-        ))}
+      <nav className="flex flex-col gap-2">
+        {menu.map((m) => {
+          const Icon = m.icon;
+          return (
+            <NavLink
+              key={m.path}
+              to={m.path}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  isActive
+                    ? "bg-gradient-to-r from-[#0ea5e9]/20 to-[#7c3aed]/10 text-white shadow"
+                    : "text-gray-300 hover:bg-gray-800"
+                }`
+              }
+            >
+              <Icon className="w-5 h-5 text-gray-300" />
+              <span>{m.name}</span>
+            </NavLink>
+          );
+        })}
       </nav>
 
-      {/* Footer */}
-      <div className="mt-auto text-center text-xs text-gray-600 border-t border-gray-800 pt-4">
-        © 2025 Productivity Hub
+      <div className="mt-auto text-xs text-gray-500 pt-6 border-t border-gray-800">
+        © {new Date().getFullYear()} Recapify
       </div>
-    </div>
+    </aside>
   );
 }

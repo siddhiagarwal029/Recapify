@@ -1,20 +1,23 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
+
 import Dashboard from "./pages/Dashboard";
-import Meetings from "./pages/Meetings";
-import Interviews from "./pages/Interviews";
-import Learning from "./pages/Learning";
+import Upload from "./pages/Upload";
+import Summary from "./pages/Summary";
+import Tasks from "./pages/Tasks";
 
 export default function App() {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/meetings" element={<Meetings />} />
-        <Route path="/interviews" element={<Interviews />} />
-        <Route path="/learning" element={<Learning />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+      <Route element={<Layout />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/upload" element={<Upload />} />
+        <Route path="/summary" element={<Summary />} />
+        <Route path="/tasks" element={<Tasks />} />
+      </Route>
+    </Routes>
   );
 }

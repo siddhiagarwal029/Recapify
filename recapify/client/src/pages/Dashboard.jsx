@@ -1,79 +1,96 @@
 import React from "react";
-import { FaVideo, FaComments, FaBookOpen, FaCalendarAlt, FaBrain } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { ArrowUpTrayIcon, MicrophoneIcon } from "@heroicons/react/24/outline";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   return (
-    <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-white">
-      <div className="col-span-2 bg-[#1e1e1e] rounded-xl p-5 border border-gray-800 shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Recent Meetings</h2>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">Welcome back</h1>
+          <p className="text-sm text-gray-400 mt-1">
+            Quick actions and recent meetings.
+          </p>
+        </div>
 
-        <div className="space-y-4">
-          <div className="bg-[#2a2a2a] p-4 rounded-lg flex justify-between items-start">
-            <div>
-              <h3 className="text-lg font-medium">Product Strategy Discussion</h3>
-              <p className="text-sm text-gray-400 mt-1">about 2 hours ago</p>
-              <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
-                <FaCalendarAlt className="text-gray-400" /> 45 min • 5 action items
-              </p>
-            </div>
-            <span className="text-green-500 text-sm bg-green-500/20 px-3 py-1 rounded-full">
-              completed
-            </span>
-          </div>
+        <div className="flex gap-3">
+          <button
+            onClick={() => navigate("/upload")}
+            className="flex items-center gap-2 bg-gradient-to-r from-[#0ea5e9] to-[#7c3aed] px-4 py-2 rounded-lg text-sm font-medium shadow"
+          >
+            <ArrowUpTrayIcon className="w-4 h-4" />
+            Upload / Start
+          </button>
 
-          <div className="bg-[#2a2a2a] p-4 rounded-lg flex justify-between items-start">
-            <div>
-              <h3 className="text-lg font-medium">Engineering Team Sync</h3>
-              <p className="text-sm text-gray-400 mt-1">1 day ago</p>
-              <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
-                <FaCalendarAlt className="text-gray-400" /> 30 min
-              </p>
-            </div>
-            <span className="text-orange-400 text-sm bg-orange-500/20 px-3 py-1 rounded-full">
-              processing
-            </span>
-          </div>
+          <button
+            onClick={() => navigate("/upload")}
+            className="flex items-center gap-2 bg-[#0b1220] border border-gray-800 px-4 py-2 rounded-lg text-sm text-gray-200"
+          >
+            <MicrophoneIcon className="w-4 h-4" />
+            Record Meeting
+          </button>
         </div>
       </div>
 
-      <div className="space-y-6">
-        <div className="bg-[#1e1e1e] rounded-xl p-5 border border-gray-800 shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+      {/* recent activity mock */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-[#071428] border border-gray-800 rounded-xl p-6">
+          <h2 className="text-lg font-medium mb-4">Recent Meetings</h2>
+
           <div className="space-y-3">
-            <button className="w-full bg-[#2a2a2a] hover:bg-[#333] transition p-3 rounded-lg text-sm text-gray-300 text-left flex items-center gap-3">
-              <FaVideo className="text-blue-400" /> Upload New Meeting Recording
-            </button>
-            <button className="w-full bg-[#2a2a2a] hover:bg-[#333] transition p-3 rounded-lg text-sm text-gray-300 text-left flex items-center gap-3">
-              <FaComments className="text-green-400" /> Start Interview Practice
-            </button>
-            <button className="w-full bg-[#2a2a2a] hover:bg-[#333] transition p-3 rounded-lg text-sm text-gray-300 text-left flex items-center gap-3">
-              <FaBookOpen className="text-purple-400" /> Continue Learning
-            </button>
+            <div className="p-4 bg-[#071a2b] border border-gray-800 rounded-lg flex justify-between items-start">
+              <div>
+                <div className="font-semibold">Product Strategy</div>
+                <div className="text-xs text-gray-400 mt-1">Today • 45 min</div>
+              </div>
+              <div className="text-sm text-green-400 bg-green-900/20 px-3 py-1 rounded-full">
+                Finalized
+              </div>
+            </div>
+
+            <div className="p-4 bg-[#071a2b] border border-gray-800 rounded-lg flex justify-between items-start">
+              <div>
+                <div className="font-semibold">Engineering Weekly</div>
+                <div className="text-xs text-gray-400 mt-1">Yesterday • 30 min</div>
+              </div>
+              <div className="text-sm text-yellow-400 bg-yellow-900/20 px-3 py-1 rounded-full">
+                Draft
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="bg-[#1e1e1e] rounded-xl p-5 border border-gray-800 shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Today's Goals</h2>
-          <div className="space-y-3">
-            <div className="bg-[#2a2a2a] p-3 rounded-lg flex items-center gap-3">
-              <FaCalendarAlt className="text-orange-400 text-lg" />
-              <div>
-                <p className="font-medium text-gray-200">
-                  Review Q2 strategy meeting notes
-                </p>
-                <p className="text-xs text-gray-400 mt-1">Due: Today, 5:00 PM</p>
-              </div>
+        {/* right column */}
+        <div className="space-y-4">
+          <div className="bg-[#071428] border border-gray-800 rounded-xl p-4">
+            <h3 className="font-medium">Quick Actions</h3>
+            <div className="mt-3 flex flex-col gap-2">
+              <button
+                onClick={() => navigate("/upload")}
+                className="text-left px-3 py-2 bg-[#0b1220] border border-gray-800 rounded-md"
+              >
+                Upload Meeting
+              </button>
+              <button
+                onClick={() => navigate("/upload")}
+                className="text-left px-3 py-2 bg-[#0b1220] border border-gray-800 rounded-md"
+              >
+                Record Meeting
+              </button>
+              <button
+                onClick={() => navigate("/summary")}
+                className="text-left px-3 py-2 bg-[#0b1220] border border-gray-800 rounded-md"
+              >
+                View Drafts
+              </button>
             </div>
+          </div>
 
-            <div className="bg-[#2a2a2a] p-3 rounded-lg flex items-center gap-3">
-              <FaBrain className="text-pink-400 text-lg" />
-              <div>
-                <p className="font-medium text-gray-200">
-                  Complete React performance quiz
-                </p>
-                <p className="text-xs text-gray-400 mt-1">Recommended</p>
-              </div>
-            </div>
+          <div className="bg-[#071428] border border-gray-800 rounded-xl p-4">
+            <h3 className="font-medium">Upcoming</h3>
+            <div className="mt-2 text-sm text-gray-400">No upcoming meetings</div>
           </div>
         </div>
       </div>
