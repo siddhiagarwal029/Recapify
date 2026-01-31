@@ -36,7 +36,7 @@ export default function Summary() {
             <tr className="border-b border-gray-700">
               <th className="py-3 px-4 text-gray-300 font-medium">Topic</th>
               <th className="py-3 px-4 text-gray-300 font-medium">Discussion</th>
-              <th className="py-3 px-4 text-gray-300 font-medium">Owner</th>
+              <th className="py-3 px-4 text-gray-300 font-medium">Assigned to</th>
               <th className="py-3 px-4 text-gray-300 font-medium">Deadline</th>
             </tr>
           </thead>

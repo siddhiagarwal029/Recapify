@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Upload() {
@@ -11,21 +12,66 @@ export default function Upload() {
     durationMinutes: 30,
     participants: "",
   });
+
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleFile = (e) => {
     setFile(e.target.files?.[0] ?? null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const draft = `Draft MoM for "${form.title}"\nHost: ${form.host}\nPlatform: ${form.platform}\nTime: ${form.dateTime}\nParticipants: ${form.participants}\n\nKey points:\n- (auto-generated summary placeholder)\n\nAction Items:\n- Assign owners and due dates after review.`;
+    setLoading(true);
 
-    navigate("/summary", { state: { meeting: form, fileName: file?.name, draft } });
+    try {
+      const meetingData = {
+        title: form.title,
+        host: form.host,
+        platform: form.platform,
+        dateTime: form.dateTime,
+        durationMinutes: form.durationMinutes,
+        participants: form.participants,
+        fileName: file?.name || null,
+      };
+
+      const response = await axios.post(
+        "http://localhost:5000/api/meetings",
+        meetingData
+      );
+
+      const savedMeeting = response.data.meeting;
+      const draft = `
+      Draft MoM for "${savedMeeting.title}"
+      Host: ${savedMeeting.host}
+      Platform: ${savedMeeting.platform}
+      Time: ${savedMeeting.dateTime}
+      Participants: ${savedMeeting.participants}
+
+      Key Highlights:
+      - AI-generated summary will appear here.
+
+      Action Items:
+      - Add/edit tasks after reviewing the MoM.
+      `;
+
+      navigate("/summary", {
+        state: {
+          meeting: savedMeeting,
+          draft,
+        },
+      });
+
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      alert("Error saving meeting");
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,7 +80,9 @@ export default function Upload() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="text-sm text-gray-300 block mb-1">Meeting Title</label>
+          <label className="text-sm text-gray-300 block mb-1">
+            Meeting Title
+          </label>
           <input
             name="title"
             value={form.title}
@@ -44,7 +92,6 @@ export default function Upload() {
             placeholder="Weekly sync / Product review"
           />
         </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="text-sm text-gray-300 block mb-1">Host</label>
@@ -72,64 +119,74 @@ export default function Upload() {
             </select>
           </div>
         </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm text-gray-300 block mb-1">Meeting Time</label>
+            <label className="text-sm text-gray-300 block mb-1">
+              Meeting Time
+            </label>
             <input
               name="dateTime"
               value={form.dateTime}
               onChange={handleChange}
-              required
               type="datetime-local"
+              required
               className="w-full bg-[#071428] border border-gray-800 rounded-md px-3 py-2 text-sm"
             />
           </div>
 
           <div>
-            <label className="text-sm text-gray-300 block mb-1">Duration (minutes)</label>
+            <label className="text-sm text-gray-300 block mb-1">
+              Duration (minutes)
+            </label>
             <input
               name="durationMinutes"
+              type="number"
+              min="1"
               value={form.durationMinutes}
               onChange={handleChange}
-              type="number"
-              min={1}
               className="w-full bg-[#071428] border border-gray-800 rounded-md px-3 py-2 text-sm"
             />
           </div>
         </div>
+        <div>
+          <label className="text-sm text-gray-300 block mb-1">
+            Number of Participants
+          </label>
+          <input
+            type="number"
+            name="participants"
+            value={form.participants}
+            onChange={handleChange}
+            placeholder="e.g. 5"
+            min="1"
+            className="w-full bg-[#071428] border border-gray-800 rounded-md px-3 py-2 text-sm"
+          />
+        </div>
 
         <div>
-  <label className="text-sm text-gray-300 block mb-1">Number of Participants</label>
-  <input
-    type="number"
-    name="participants"
-    value={form.participants}
-    onChange={handleChange}
-    placeholder="e.g. 5"
-    min="1"
-    className="w-full bg-[#071428] border border-gray-800 rounded-md px-3 py-2 text-sm"
-  />
-</div>
-
-
-        <div>
-          <label className="text-sm text-gray-300 block mb-1">Upload recording (optional)</label>
+          <label className="text-sm text-gray-300 block mb-1">
+            Upload Recording (optional)
+          </label>
           <input type="file" onChange={handleFile} className="text-sm" />
-          {file && <div className="text-xs mt-2 text-gray-400">Selected: {file.name}</div>}
+          {file && (
+            <p className="text-xs mt-2 text-gray-400">Selected: {file.name}</p>
+          )}
         </div>
 
         <div className="flex gap-3">
           <button
             type="submit"
+            disabled={loading}
             className="px-4 py-2 bg-gradient-to-r from-[#0ea5e9] to-[#7c3aed] rounded-md text-sm font-medium"
           >
-            Generate Draft MoM
+            {loading ? "Saving..." : "Generate Draft MoM"}
           </button>
 
           <button
             type="button"
-            onClick={() => alert("Recording flow placeholder — implement with MediaRecorder / WebRTC")}
+            onClick={() =>
+              alert("Recording will be added later using MediaRecorder/WebRTC")
+            }
             className="px-4 py-2 bg-[#0b1220] border border-gray-800 rounded-md text-sm"
           >
             Start Live Recording
